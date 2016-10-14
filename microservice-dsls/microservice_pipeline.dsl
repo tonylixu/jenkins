@@ -47,7 +47,7 @@ service_lists.each {
     createMasterBuildJob(it.parent_name, it, versions, urls)
     println "Create release job for ${it.parent_name}-service"
     // Eliminate weird jenkins duplicate entries
-    createReleaseJob(it.parent_name, release_down_streams[it.parent_name].unique(), release_artifacts[it.parent_name].unique(), versions, urls)
+    createReleaseJob(it.parent_name, versions, urls)
     println "Create deploy job for ${it.name}-service"
     createDeployJob(it.parent_name, it, versions)
 }
@@ -174,7 +174,7 @@ def createMasterBuildJob(name, data, versions, urls) {
 /**
  * Create microservice release job
  */
-def createReleaseJob(name, down_streams, artifacts_dirs, versions, urls) {
+def createReleaseJob(name, versions, urls) {
     mavenJob("${name}-release") {
         scm {
             git("git@github.com:tonylixu/jenkins-dsl.git", 'master')
@@ -236,12 +236,6 @@ def createReleaseJob(name, down_streams, artifacts_dirs, versions, urls) {
 
             publishers << ('hudson.tasks.ArtifactArchiver' {
                 artifacts(artifacts_dirs.join(","))
-            })
-
-            // Downstream manual build
-            def down_streams_unique = down_streams.unique()
-            publishers << ('au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger'(plugin="build-pipeline-plugin@1.5.1") {
-                downstreamProjectNames(down_streams_unique.join(","))
             })
         }
     }
