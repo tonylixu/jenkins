@@ -58,7 +58,7 @@ def microservicesByGroup = service_map.groupBy({view_group})
  *  nestedView() has to take a parameter, and give a non-empty name will
  * create an empty pipeline view, this could be a bug
  */
-nestedView(' ') {
+nestedView('a') {
     columns {
         status()
         weather()
