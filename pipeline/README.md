@@ -59,3 +59,5 @@ pipeline {
     }
 }
 ```
+* Stage: Defines a conceptually distinct subset of tasks performed through the entire pipeline. For exmaple, "Build", "Test" and "Deploy".
+* Step: A single task. Fundmentally, a task tells Jenkins what to do at a paticular point of time.
