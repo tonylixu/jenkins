@@ -61,3 +61,28 @@ pipeline {
 ```
 * Stage: Defines a conceptually distinct subset of tasks performed through the entire pipeline. For exmaple, "Build", "Test" and "Deploy".
 * Step: A single task. Fundmentally, a task tells Jenkins what to do at a paticular point of time.
+
+### Pipeline Example
+```groovy
+pipeline { # Pipeline block
+    agent any 
+    stages {  # Subset of tasks
+        stage('Build') { 
+            steps { # A single task
+                sh 'make' 
+            }
+        }
+        stage('Test'){
+            steps {
+                sh 'make check'
+                junit 'reports/**/*.xml' 
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'make publish'
+            }
+        }
+    }
+}
+```
