@@ -26,4 +26,10 @@ A Jenkinsfile can be written using two types of syntax: Declarative and scripted
 * Designed to make writing and reading pipeline code easier
 
 ### Why pipeline
-Jenkisn is fundamentally an automation engine
+Jenkisn is fundamentally an automation engine which support a number of automation patterns. Pipeline adds a set of powerful
+tools onto Jenkins supporting use cases that span from simple CI to comprehensive CD pipeline. By modeling a series of related tasks, users can take advantage of the many features of Pipeline:
+* Code : Pipeline is implemented in code and checked into source control, giving teams the ability to edit, review and iterate upon their delivery pipeline.
+* Durable: Pipeline can survive both planned and unplanned restarts of Jenkins.
+* Pausable: Pipeline can optionally stop and wait for human input or approval before continue.
+* Versatile: Pipeline supports complex real world CD requirements
+* Extensible: Pipeline plugin supports custom extensions to its DSL and mutiple options for integration with other plugins.
