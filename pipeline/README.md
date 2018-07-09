@@ -33,3 +33,29 @@ tools onto Jenkins supporting use cases that span from simple CI to comprehensiv
 * Pausable: Pipeline can optionally stop and wait for human input or approval before continue.
 * Versatile: Pipeline supports complex real world CD requirements
 * Extensible: Pipeline plugin supports custom extensions to its DSL and mutiple options for integration with other plugins.
+
+### Pipeline concepts
+* Pipeline: A user defined model of CD pipeline. A pipeline code defines your entire build process, which typically includes checkout, building, testing and deploying stages.
+```groovy
+# Jenkinsfile (Declarative Pipeline)
+pipeline {
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                // 
+            }
+        }
+        stage('Test') { 
+            steps {
+                // 
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                // 
+            }
+        }
+    }
+}
+```
