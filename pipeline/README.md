@@ -14,3 +14,16 @@ source control repo. This is the foundation of `Pipeline as code`, treating the 
 versioned and reviewed like any other code.
 
 ### Jenkinsfile benefits:
+Creating a Jenkinsfile and committing it to source control provides a number of immediate benefits:
+* Automatically creates a pipeline build process for all the branches and PRs.
+* Code review/iteration on the pipeline
+* Audit trial for the pipeline
+* Single source of truth for the pipeline. No more misconfigurations and blames.
+
+### Declarative vs Scripted
+A Jenkinsfile can be written using two types of syntax: Declarative and scripted. They are constructed fundamentally differently. Declarative is a more recent feature of Jenkins pipeline which:
+* Provide richer syntactical features
+* Designed to make writing and reading pipeline code easier
+
+### Why pipeline
+Jenkisn is fundamentally an automation engine
