@@ -1,0 +1,82 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    // You can specify agent label in later stage
+    agent none
+    options {
+        parallelsAlwaysFailFast()
+    }
+    stages {
+        stage('init') {
+            steps {
+                println "Build started"
+            }
+        }
+        stage('Linux env Build') {
+            parallel {
+                stage('linux') {
+                    agent {
+                        label "master"
+                    }
+                    stages {
+                        // Active the Python virtual env
+                        stage('setup') {
+                            steps {
+                                sh label: 'Active python venv', script: '''
+                                    source /var/lib/jenkins/python-venvs/testenv/bin/activate
+                                    pip install --upgrade pip
+                                    pip install -r requirements.txt
+                                    '''
+                            }
+                        }
+                        stage('build') {
+                            steps {
+                                sh label: 'build', script: '''
+                                    source /var/lib/jenkins/python-venvs/testenv/bin/activate
+                                    cd test-project
+                                    tox
+                                    python setup.py sdist
+                                    python setup.py bdist_wheel
+                                    ls ./
+                                    '''
+                            }
+                        }
+                        stage('deploy') {
+                            when {
+                                branch 'master'
+                            }
+                            steps {
+                                script {
+                                    env.WORKSPACE = pwd()
+                                    def version = readFile "${env.WORKSPACE}/build.info"
+                                    version = version.replaceAll("\n", "");
+                                    println "Version is $version"
+                                    sh label: 'Publish file', script: "deploy to you package management system"
+                                }
+                            }
+                        }
+                    }
+                    post {
+                        // Slack notifications
+                        success {
+                            sh label: 'success', script: 'echo "Success"'
+                            slackSend channel: 'notifications', color: 'good', message: "<${env.BUILD_URL}|${env.JOB_NAME} #${env.BUILD_NUMBER}> - Build completed successfully"
+                        }
+                        failure {
+                            sh label: 'failure', script: 'echo "Failure"'
+                            slackSend channel: 'notifications', color: 'danger', message: "<${env.BUILD_URL}|${env.JOB_NAME} #${env.BUILD_NUMBER}> - Build failed"
+                        }
+                        aborted {
+                            sh label: 'aborted', script: 'echo "Aborted"'
+                            slackSend channel: 'notifications', color: 'danger', message: "<${env.BUILD_URL}|${env.JOB_NAME} #${env.BUILD_NUMBER}> - Build aborted"
+                        }
+                        always {
+                            sh label: 'Linux build done', script: 'echo "Done Linux build"'
+                            cleanWs()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
